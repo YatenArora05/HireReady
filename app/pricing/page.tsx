@@ -48,10 +48,19 @@ export default function PricingPage() {
           <Link href="/#roles">Roles</Link>
           <Link href="/#reviews">Reviews</Link>
           <Link href="/#faq">FAQ</Link>
+          
         </div>
         <div className="nav-cta">
-          <button className="btn-ghost-sm pricing-active">Pricing</button>
-          <button className="btn-white-sm">Sign in with Google</button>
+          {/* <button className="btn-ghost-sm pricing-active">Pricing</button> */}
+          <Link href="/signin" className="auth-btn auth-btn-signin">
+            Sign In
+          </Link>
+          <Link href="/signup" className="auth-btn auth-btn-signup" aria-label="Sign Up">
+            <span className="signup-text-track" aria-hidden="true">
+              <span>Sign Up</span>
+              <span>Get Started</span>
+            </span>
+          </Link>
         </div>
       </nav>
 

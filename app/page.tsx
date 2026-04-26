@@ -61,12 +61,18 @@ export default function Home() {
           <a href="#roles">Roles</a>
           <a href="#reviews">Reviews</a>
           <a href="#faq">FAQ</a>
+          <a href="/pricing">Pricing</a>
         </div>
         <div className="nav-cta">
-          <Link href="/pricing" className="btn-ghost-sm">
-            Pricing
+          <Link href="/signin" className="auth-btn auth-btn-signin">
+            Sign In
           </Link>
-          <button className="btn-white-sm">Sign in with Google</button>
+          <Link href="/signup" className="auth-btn auth-btn-signup" aria-label="Sign Up">
+            <span className="signup-text-track" aria-hidden="true">
+              <span>Sign Up</span>
+              <span>Get Started</span>
+            </span>
+          </Link>
         </div>
       </nav>
 
