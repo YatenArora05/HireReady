@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useSession, signOut } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 const faqItems = [
   {
@@ -32,9 +33,12 @@ const faqItems = [
 ];
 
 export default function Home() {
+  const router = useRouter();
   const [openFaq, setOpenFaq] = useState<number | null>(null);
   const [openProfileMenu, setOpenProfileMenu] = useState(false);
+  const [showLoginToast, setShowLoginToast] = useState(false);
   const profileMenuRef = useRef<HTMLDivElement | null>(null);
+  const toastTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const { data: session } = useSession();
   const isLoggedIn = Boolean(session?.user);
   const credits = session?.user?.credits ?? 100;
@@ -56,6 +60,14 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
+    return () => {
+      if (toastTimeoutRef.current) {
+        clearTimeout(toastTimeoutRef.current);
+      }
+    };
+  }, []);
+
+  useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (!profileMenuRef.current) return;
       if (!profileMenuRef.current.contains(event.target as Node)) {
@@ -66,6 +78,17 @@ export default function Home() {
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
+
+  const handleTryNowClick = () => {
+    if (isLoggedIn) {
+      router.push("/interview-start");
+      return;
+    }
+
+    setShowLoginToast(true);
+    if (toastTimeoutRef.current) clearTimeout(toastTimeoutRef.current);
+    toastTimeoutRef.current = setTimeout(() => setShowLoginToast(false), 2400);
+  };
 
   return (
     <>
@@ -142,7 +165,9 @@ export default function Home() {
             AI feedback and suggestions to sharpen every answer.
           </p>
           <div className="hero-btns">
-            <button className="btn-primary">Try now for free &nbsp;-&gt;</button>
+            <button className="btn-primary" onClick={handleTryNowClick}>
+              {isLoggedIn ? "Start practising →" : "Try now for free →"}
+            </button>
             <button className="btn-outline">Watch demo</button>
           </div>
           <p className="hero-note">No credit card needed</p>
@@ -399,7 +424,9 @@ export default function Home() {
             interview skills?
           </h2>
           <p>Start practicing in seconds. No credit card required.</p>
-          <button className="btn-primary">Try now for free &nbsp;-&gt;</button>
+          <button className="btn-primary" onClick={handleTryNowClick}>
+            {isLoggedIn ? "Start practising →" : "Try now for free →"}
+          </button>
         </div>
       </section>
 
@@ -437,6 +464,12 @@ export default function Home() {
           Questions? Email <a href="mailto:hello@prepai.io">hello@prepai.io</a>
         </div>
       </footer>
+
+      {showLoginToast ? (
+        <div className="login-toast show" role="status" aria-live="polite">
+          Please login to start practising.
+        </div>
+      ) : null}
     </>
   );
 }

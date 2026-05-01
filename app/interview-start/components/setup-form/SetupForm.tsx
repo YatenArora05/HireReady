@@ -13,16 +13,8 @@ const analyzeSteps = [
   "Finalising insights...",
 ];
 
-type Analysis = { score: number; exp: number; skill: number; comp: number; ats: number; tags: string[] };
-
-const finalAnalysis: Analysis = {
-  score: 82,
-  exp: 78,
-  skill: 85,
-  comp: 90,
-  ats: 74,
-  tags: ["React", "Node.js", "REST APIs", "Team Lead", "Agile", "SQL", "AWS"],
-};
+type Analysis = { score: number; tags: string[] };
+type ResumeExtract = { role: string; experience: string; projects: string[]; skills: string[] };
 
 export default function SetupForm() {
   const router = useRouter();
@@ -32,10 +24,12 @@ export default function SetupForm() {
   const [type, setType] = useState("technical");
   const [difficulty, setDifficulty] = useState("intermediate");
   const [fileName, setFileName] = useState("");
+  const [resumeFile, setResumeFile] = useState<File | null>(null);
   const [analyzeVisible, setAnalyzeVisible] = useState(false);
   const [analysisStep, setAnalysisStep] = useState("");
   const [analysis, setAnalysis] = useState<Analysis | null>(null);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const [analyzeError, setAnalyzeError] = useState("");
   const [isStarting, setIsStarting] = useState(false);
   const [startText, setStartText] = useState("Start Interview  →");
   const [roleError, setRoleError] = useState(false);
@@ -50,34 +44,76 @@ export default function SetupForm() {
   const handleFile = (file?: File) => {
     if (!file) return;
     setFileName(file.name);
+    setResumeFile(file);
     setAnalyzeVisible(true);
     setAnalysis(null);
     setAnalysisStep("");
+    setAnalyzeError("");
   };
 
-  const runAnalyze = () => {
-    if (!fileName || isAnalyzing || analysis) return;
+  const runAnalyze = async () => {
+    if (!resumeFile || isAnalyzing) return;
     setIsAnalyzing(true);
+    setAnalyzeError("");
     let idx = 0;
     setAnalysisStep(analyzeSteps[0]);
-    const timer = setInterval(() => {
+    const stepTimer = setInterval(() => {
       idx += 1;
       if (idx < analyzeSteps.length) {
         setAnalysisStep(analyzeSteps[idx]);
-      } else {
-        clearInterval(timer);
-        setIsAnalyzing(false);
-        setAnalysisStep("Analysis complete");
-        setAnalysis(finalAnalysis);
       }
     }, 620);
+
+    try {
+      const formData = new FormData();
+      formData.append("resume", resumeFile);
+
+      const response = await fetch("/api/resume-analyze", {
+        method: "POST",
+        body: formData,
+      });
+
+      const raw = await response.text();
+      let data: unknown = null;
+      try {
+        data = JSON.parse(raw);
+      } catch {
+        throw new Error("Resume analyzer returned invalid response. Please try again.");
+      }
+
+      const result = data as {
+        error?: string;
+        extract?: ResumeExtract;
+        analysis?: Analysis;
+      };
+
+      if (!response.ok) {
+        throw new Error(result.error || "Failed to analyze resume.");
+      }
+
+      const extract = result.extract as ResumeExtract;
+      const nextAnalysis = result.analysis as Analysis;
+
+      if (extract.role && !role.trim()) setRole(extract.role);
+      if (extract.experience && !experience.trim()) setExperience(extract.experience);
+      setAnalysis(nextAnalysis);
+      setAnalysisStep("Analysis complete");
+    } catch (error) {
+      setAnalyzeError(error instanceof Error ? error.message : "Failed to analyze resume.");
+      setAnalysisStep("Analysis failed");
+    } finally {
+      clearInterval(stepTimer);
+      setIsAnalyzing(false);
+    }
   };
 
   const resetUpload = () => {
     setFileName("");
+    setResumeFile(null);
     setAnalyzeVisible(false);
     setAnalysisStep("");
     setAnalysis(null);
+    setAnalyzeError("");
     if (inputRef.current) inputRef.current.value = "";
   };
 
@@ -207,6 +243,7 @@ export default function SetupForm() {
         <button type="button" className={`${styles.btnAnalyze} ${isAnalyzing ? styles.analyzing : ""}`} onClick={runAnalyze}>
           {analysisStep || "Analyze Resume"}
         </button>
+        {analyzeError ? <p className={styles.analyzeError}>{analyzeError}</p> : null}
 
         <div className={`${styles.analysisResult} ${analysis ? styles.visible : ""}`}>
           <div className={styles.arHeader}>
@@ -216,25 +253,9 @@ export default function SetupForm() {
               <div className={styles.arScoreLbl}>Match score</div>
             </div>
           </div>
-          <div className={styles.arBody}>
-            {[
-              ["Experience", analysis?.exp ?? 0],
-              ["Skills match", analysis?.skill ?? 0],
-              ["Completeness", analysis?.comp ?? 0],
-              ["ATS score", analysis?.ats ?? 0],
-            ].map(([label, value]) => (
-              <div className={styles.arSkillRow} key={label}>
-                <span className={styles.arSkillName}>{label}</span>
-                <div className={styles.arBarTrack}>
-                  <div className={styles.arBarFill} style={{ width: `${value}%` }} />
-                </div>
-                <span className={styles.arSkillVal}>{analysis ? `${value}%` : "—"}</span>
-              </div>
-            ))}
-          </div>
           <div className={styles.arTags}>
             {(analysis?.tags ?? []).map((tag) => (
-              <span className={styles.arTag} key={tag}>
+              <span className={styles.arTag} key={tag} >
                 {tag}
               </span>
             ))}

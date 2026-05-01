@@ -68,15 +68,11 @@ export default function VoicePracticeView() {
                   <div className={styles.aiFaceRing2} />
                   <div className={styles.aiSpeakingRing} />
                   <div className={styles.aiFaceCore}>
-                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
-                      <circle cx="10" cy="10" r="3" fill="rgba(255,255,255,0.5)" />
-                      <path
-                        d="M10 4v2M10 14v2M4 10H2M18 10h-2M5.64 5.64l1.42 1.42M12.94 12.94l1.42 1.42M5.64 14.36l1.42-1.42M12.94 7.06l1.42-1.42"
-                        stroke="rgba(255,255,255,0.3)"
-                        strokeWidth="1.2"
-                        strokeLinecap="round"
-                      />
-                    </svg>
+                    <img
+                      src="/api/ai-person-image"
+                      alt="AI interviewer"
+                      className={styles.aiPersonImage}
+                    />
                   </div>
                 </div>
               </div>
