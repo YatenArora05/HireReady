@@ -123,6 +123,152 @@ nav {
   gap: 14px;
 }
 
+.auth-user-wrap {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.credits-pill {
+  height: 38px;
+  min-width: 86px;
+  padding: 0 15px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background:
+    radial-gradient(120% 130% at 0% 0%, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.01) 60%),
+    linear-gradient(140deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.035) 55%, rgba(255, 255, 255, 0.015) 100%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.14),
+    0 8px 20px rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  color: rgba(255, 255, 255, 0.92);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 13px;
+  font-family: var(--font-dm-sans), sans-serif;
+  letter-spacing: 0.01em;
+  font-weight: 500;
+}
+
+.credits-icon {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  background: rgba(255, 255, 255, 0.06);
+  color: rgba(255, 255, 255, 0.86);
+  font-size: 10px;
+  line-height: 1;
+  font-weight: 700;
+}
+
+.profile-menu-wrap {
+  position: relative;
+}
+
+.account-avatar-btn {
+  height: 38px;
+  width: 38px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.24);
+  background:
+    radial-gradient(120% 130% at 0% 0%, rgba(255, 255, 255, 0.18) 0%, rgba(255, 255, 255, 0.02) 60%),
+    linear-gradient(140deg, rgba(255, 255, 255, 0.13) 0%, rgba(255, 255, 255, 0.06) 55%, rgba(255, 255, 255, 0.02) 100%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.22),
+    0 8px 20px rgba(0, 0, 0, 0.26);
+  color: #f8f9fb;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.26s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.account-avatar-btn:hover,
+.account-avatar-btn.open {
+  border-color: rgba(255, 255, 255, 0.35);
+  transform: translateY(-1px);
+}
+
+.account-avatar {
+  height: 36px;
+  width: 36px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background:
+    radial-gradient(120% 130% at 0% 0%, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.01) 60%),
+    linear-gradient(140deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.035) 55%, rgba(255, 255, 255, 0.015) 100%);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  color: rgba(255, 255, 255, 0.92);
+  font-weight: 700;
+  font-size: 14px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.14),
+    0 8px 20px rgba(0, 0, 0, 0.2);
+}
+
+.profile-dropdown {
+  position: absolute;
+  top: 48px;
+  right: 0;
+  min-width: 186px;
+  padding: 12px 12px 10px;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background:
+    radial-gradient(140% 140% at 15% 0%, rgba(255, 255, 255, 0.1) 0%, transparent 60%),
+    linear-gradient(180deg, rgba(13, 13, 18, 0.95) 0%, rgba(9, 9, 13, 0.98) 100%);
+  backdrop-filter: blur(22px);
+  -webkit-backdrop-filter: blur(22px);
+  opacity: 0;
+  transform: translateY(-10px);
+  pointer-events: none;
+  transition: all 0.28s cubic-bezier(0.22, 1, 0.36, 1);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.34);
+}
+
+.profile-dropdown.open {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.profile-name {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.62);
+  margin-bottom: 10px;
+  padding-left: 2px;
+}
+
+.profile-logout-btn {
+  width: 100%;
+  height: 35px;
+  border-radius: 9px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.09) 0%, rgba(255, 255, 255, 0.04) 100%);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.profile-logout-btn:hover {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.16) 0%, rgba(255, 255, 255, 0.08) 100%);
+}
+
 .auth-btn {
   width: 108px;
   min-width: 108px;
@@ -1378,6 +1524,32 @@ footer {
     font-size: 12px;
     padding: 0 12px;
     border-radius: 10px;
+  }
+
+  .account-avatar-btn {
+    height: 34px;
+    width: 34px;
+  }
+
+  .credits-pill {
+    height: 34px;
+    min-width: 78px;
+    padding: 0 12px;
+    border-radius: 10px;
+    font-size: 12px;
+    gap: 7px;
+  }
+
+  .credits-icon {
+    width: 14px;
+    height: 14px;
+    font-size: 9px;
+  }
+
+  .account-avatar {
+    width: 30px;
+    height: 30px;
+    font-size: 12px;
   }
 
   .signup-text-track span {

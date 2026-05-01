@@ -1,7 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import { useSession, signOut } from "next-auth/react";
 
 const faqItems = [
   {
@@ -32,6 +33,13 @@ const faqItems = [
 
 export default function Home() {
   const [openFaq, setOpenFaq] = useState<number | null>(null);
+  const [openProfileMenu, setOpenProfileMenu] = useState(false);
+  const profileMenuRef = useRef<HTMLDivElement | null>(null);
+  const { data: session } = useSession();
+  const isLoggedIn = Boolean(session?.user);
+  const credits = session?.user?.credits ?? 100;
+  const userName = session?.user?.name?.trim() || "User";
+  const userInitial = userName.charAt(0).toUpperCase();
 
   useEffect(() => {
     const elements = document.querySelectorAll(".reveal");
@@ -45,6 +53,18 @@ export default function Home() {
     );
     elements.forEach((el) => obs.observe(el));
     return () => obs.disconnect();
+  }, []);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (!profileMenuRef.current) return;
+      if (!profileMenuRef.current.contains(event.target as Node)) {
+        setOpenProfileMenu(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
   return (
@@ -64,15 +84,46 @@ export default function Home() {
           <a href="/pricing">Pricing</a>
         </div>
         <div className="nav-cta">
-          <Link href="/signin" className="auth-btn auth-btn-signin">
-            Sign In
-          </Link>
-          <Link href="/signup" className="auth-btn auth-btn-signup" aria-label="Sign Up">
-            <span className="signup-text-track" aria-hidden="true">
-              <span>Sign Up</span>
-              <span>Get Started</span>
-            </span>
-          </Link>
+          {isLoggedIn ? (
+            <div className="auth-user-wrap">
+              <div className="credits-pill">
+                <span className="credits-icon">$</span>
+                {credits}
+              </div>
+              <div className="profile-menu-wrap" ref={profileMenuRef}>
+                <button
+                  type="button"
+                  className={`account-avatar-btn ${openProfileMenu ? "open" : ""}`}
+                  onClick={() => setOpenProfileMenu((prev) => !prev)}
+                  aria-label="Open profile menu"
+                >
+                  <span className="account-avatar">{userInitial}</span>
+                </button>
+                <div className={`profile-dropdown ${openProfileMenu ? "open" : ""}`}>
+                  <div className="profile-name">{userName}</div>
+                  <button
+                    type="button"
+                    className="profile-logout-btn"
+                    onClick={() => signOut({ callbackUrl: "/" })}
+                  >
+                    Logout
+                  </button>
+                </div>
+              </div>
+            </div>
+          ) : (
+            <>
+              <Link href="/signin" className="auth-btn auth-btn-signin">
+                Sign In
+              </Link>
+              <Link href="/signup" className="auth-btn auth-btn-signup" aria-label="Sign Up">
+                <span className="signup-text-track" aria-hidden="true">
+                  <span>Sign Up</span>
+                  <span>Get Started</span>
+                </span>
+              </Link>
+            </>
+          )}
         </div>
       </nav>
 
