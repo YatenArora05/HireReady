@@ -394,6 +394,12 @@
   border-color: rgba(255, 100, 100, 0.5);
 }
 
+.fieldInputReadonly {
+  opacity: 0.6;
+  cursor: default;
+  user-select: none;
+}
+
 .selectInput option {
   background: #111116;
 }
@@ -583,6 +589,16 @@
   padding: 0 16px 12px;
   font-size: 11px;
   cursor: pointer;
+}
+
+.practiceTypeHint {
+  margin-top: 8px;
+  font-size: 12px;
+  color: rgba(255, 180, 80, 0.85);
+  display: flex;
+  align-items: flex-start;
+  gap: 5px;
+  line-height: 1.5;
 }
 
 .btnSubmit {

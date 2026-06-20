@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import PracticeBackdrop from "../components/shared/PracticeBackdrop";
 import McqPracticeView from "../components/mcq/McqPracticeView";
 import PracticeNav from "../components/shared/PracticeNav";
@@ -9,9 +10,17 @@ export default function McqPage() {
       <PracticeBackdrop />
       <PracticeNav mode="mcq" />
       <section className={styles.section}>
-        <McqPracticeView />
+        <Suspense
+          fallback={
+            <div className={styles.loadingState}>
+              <div className={styles.loadingSpinner} />
+              <p className={styles.loadingText}>Preparing your session…</p>
+            </div>
+          }
+        >
+          <McqPracticeView />
+        </Suspense>
       </section>
     </div>
   );
 }
-

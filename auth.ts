@@ -50,10 +50,15 @@ export const authOptions: NextAuthOptions = {
     }),
   ],
   callbacks: {
-    async jwt({ token, user }) {
+    async jwt({ token, user, trigger, session: sessionUpdate }) {
+      // On sign in — copy user data into token
       if (user) {
         token.id = user.id;
         token.credits = user.credits ?? 100;
+      }
+      // On client-side updateSession() call — patch credits in token
+      if (trigger === "update" && sessionUpdate?.credits !== undefined) {
+        token.credits = sessionUpdate.credits as number;
       }
       return token;
     },

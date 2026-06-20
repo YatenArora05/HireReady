@@ -1,5 +1,8 @@
 import { NextResponse } from "next/server";
+import { createRequire } from "module";
 import mammoth from "mammoth";
+
+const require = createRequire(import.meta.url);
 
 type ResumeExtract = {
   role: string;
@@ -84,10 +87,7 @@ async function extractResumeText(file: File): Promise<string> {
   const buffer = Buffer.from(arrayBuffer);
 
   if (fileName.endsWith(".pdf")) {
-    // Import parser from lib path to avoid package-entry debug side effects.
-    const pdfParseModule = await import("pdf-parse/lib/pdf-parse.js");
-    const pdfParse = (pdfParseModule.default ??
-      pdfParseModule) as (buffer: Buffer) => Promise<{ text?: string }>;
+    const pdfParse = require("pdf-parse") as (buffer: Buffer) => Promise<{ text?: string }>;
     const result = await pdfParse(buffer);
     return result.text ?? "";
   }

@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import CodingPracticeView from "../components/coding/CodingPracticeView";
 import PracticeBackdrop from "../components/shared/PracticeBackdrop";
 import PracticeNav from "../components/shared/PracticeNav";
@@ -9,9 +10,17 @@ export default function CodingPage() {
       <PracticeBackdrop />
       <PracticeNav mode="coding" />
       <section className={styles.section}>
-        <CodingPracticeView />
+        <Suspense
+          fallback={
+            <div className={styles.loadingState}>
+              <div className={styles.loadingSpinner} />
+              <p className={styles.loadingText}>Preparing your session…</p>
+            </div>
+          }
+        >
+          <CodingPracticeView />
+        </Suspense>
       </section>
     </div>
   );
 }
-

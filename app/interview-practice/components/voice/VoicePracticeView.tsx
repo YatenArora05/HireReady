@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import { useSession } from "next-auth/react";
 import styles from "../../practice.module.css";
 
 const qs = [
@@ -12,11 +13,32 @@ const qs = [
 ];
 
 export default function VoicePracticeView() {
+  const { update: updateSession } = useSession();
   const [q, setQ] = useState(0);
   const [recording, setRecording] = useState(false);
   const [timeLeft, setTimeLeft] = useState(180);
   const [feedback, setFeedback] = useState("Submit an answer to receive detailed AI coaching feedback on your response.");
   const [scores, setScores] = useState({ clarity: "—", structure: "—", confidence: "—" });
+  const [creditError, setCreditError] = useState("");
+
+  // ─── Deduct 10 credits when voice session starts ──────────────────────────
+  useEffect(() => {
+    fetch("/api/voice-session", { method: "POST" })
+      .then((r) => r.json())
+      .then((data: { ok?: boolean; remainingCredits?: number; error?: string }) => {
+        if (data.error) {
+          setCreditError(data.error);
+          return;
+        }
+        if (typeof data.remainingCredits === "number") {
+          void updateSession({ credits: data.remainingCredits });
+        }
+      })
+      .catch(() => {
+        // Non-blocking — don't crash the practice if credit call fails
+      });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     if (!recording) return;
@@ -51,6 +73,11 @@ export default function VoicePracticeView() {
 
   return (
     <>
+      {creditError && (
+        <div style={{ padding: "12px 40px", background: "rgba(255,90,90,.08)", borderBottom: ".5px solid rgba(255,90,90,.2)", fontSize: 13, color: "rgba(255,90,90,.85)" }}>
+          ⚠ {creditError}
+        </div>
+      )}
       <div className={styles.secHead}>
         <div className={styles.secLeft}>
           <span className={styles.secNum}>02 /</span>

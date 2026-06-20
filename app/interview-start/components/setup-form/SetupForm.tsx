@@ -3,6 +3,7 @@
 import { useMemo, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 import styles from "../../interview-start.module.css";
 
 const analyzeSteps = [
@@ -18,7 +19,10 @@ type ResumeExtract = { role: string; experience: string; projects: string[]; ski
 
 export default function SetupForm() {
   const router = useRouter();
-  const [role, setRole] = useState("");
+  const { data: session } = useSession();
+  const userCredits = session?.user?.credits ?? 100;
+
+  const [role] = useState("Software Engineer");
   const [experience, setExperience] = useState("");
   const [practiceType, setPracticeType] = useState("ai-voice");
   const [type, setType] = useState("technical");
@@ -32,14 +36,28 @@ export default function SetupForm() {
   const [analyzeError, setAnalyzeError] = useState("");
   const [isStarting, setIsStarting] = useState(false);
   const [startText, setStartText] = useState("Start Interview  →");
-  const [roleError, setRoleError] = useState(false);
   const [expError, setExpError] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
+
+  const isCodingLocked = type !== "technical";
 
   const uploadSub = useMemo(
     () => (fileName ? "Uploaded successfully — AI will personalise your questions" : "PDF or DOCX — for deeper AI feedback"),
     [fileName]
   );
+
+  const handleInterviewTypeChange = (val: string) => {
+    setType(val);
+    // Auto-reset practice type if coding is not allowed for the new interview type
+    if (val !== "technical" && practiceType === "coding") {
+      setPracticeType("ai-voice");
+    }
+  };
+
+  const handlePracticeTypeChange = (val: string) => {
+    if (val === "coding" && isCodingLocked) return;
+    setPracticeType(val);
+  };
 
   const handleFile = (file?: File) => {
     if (!file) return;
@@ -94,7 +112,6 @@ export default function SetupForm() {
       const extract = result.extract as ResumeExtract;
       const nextAnalysis = result.analysis as Analysis;
 
-      if (extract.role && !role.trim()) setRole(extract.role);
       if (extract.experience && !experience.trim()) setExperience(extract.experience);
       setAnalysis(nextAnalysis);
       setAnalysisStep("Analysis complete");
@@ -118,11 +135,19 @@ export default function SetupForm() {
   };
 
   const handleStart = () => {
-    const missingRole = !role.trim();
     const missingExp = !experience.trim();
-    setRoleError(missingRole);
     setExpError(missingExp);
-    if (missingRole || missingExp) return;
+    if (missingExp) return;
+
+    // Block if insufficient credits
+    if (session?.user && userCredits < 10) {
+      setIsStarting(false);
+      setStartText("Start Interview  →");
+      // Show insufficient credits message inline
+      setExpError(false);
+      alert("You don't have enough credits to start a practice session. Please upgrade your plan to continue.");
+      return;
+    }
 
     setIsStarting(true);
     setStartText("Setting up your interview...");
@@ -132,9 +157,9 @@ export default function SetupForm() {
       setStartText("Ready! Starting now  ✓");
       const targetPath =
         practiceType === "mcq"
-          ? "/interview-practice/mcq"
+          ? `/interview-practice/mcq?type=${encodeURIComponent(type)}&difficulty=${encodeURIComponent(difficulty)}&experience=${encodeURIComponent(experience)}`
           : practiceType === "coding"
-          ? "/interview-practice/coding"
+          ? `/interview-practice/coding?experience=${encodeURIComponent(experience)}&difficulty=${encodeURIComponent(difficulty)}`
           : "/interview-practice/voice";
       router.push(targetPath);
     }, 2500);
@@ -168,13 +193,10 @@ export default function SetupForm() {
         <div className={styles.fieldWrap}>
           <label className={styles.fieldLabel}>Job Role</label>
           <input
-            className={`${styles.fieldInput} ${roleError ? styles.fieldInputError : ""}`}
+            className={`${styles.fieldInput} ${styles.fieldInputReadonly}`}
             value={role}
-            onChange={(e) => {
-              setRole(e.target.value);
-              if (roleError) setRoleError(false);
-            }}
-            placeholder="e.g. Software Engineer"
+            readOnly
+            placeholder="Software Engineer"
           />
         </div>
         <div className={styles.fieldWrap}>
@@ -193,13 +215,17 @@ export default function SetupForm() {
 
       <motion.div className={styles.formGroup} initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, delay: 0.62 }}>
         <label className={styles.fieldLabel}>Interview Type</label>
-        <select className={styles.selectInput} value={type} onChange={(e) => setType(e.target.value)}>
+        <select
+          className={styles.selectInput}
+          value={type}
+          onChange={(e) => handleInterviewTypeChange(e.target.value)}
+        >
           <option value="technical">Technical Interview</option>
           <option value="behavioral">Behavioral Interview</option>
           <option value="hr">HR / Screening Round</option>
-          <option value="case">Case Study Interview</option>
+          {/* <option value="case">Case Study Interview</option>
           <option value="system">System Design Interview</option>
-          <option value="mixed">Mixed (Technical + Behavioral)</option>
+          <option value="mixed">Mixed (Technical + Behavioral)</option> */}
         </select>
       </motion.div>
 
@@ -215,11 +241,22 @@ export default function SetupForm() {
 
       <motion.div className={styles.formGroup} initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, delay: 0.86 }}>
         <label className={styles.fieldLabel}>Practice Type</label>
-        <select className={styles.selectInput} value={practiceType} onChange={(e) => setPracticeType(e.target.value)}>
+        <select
+          className={styles.selectInput}
+          value={practiceType}
+          onChange={(e) => handlePracticeTypeChange(e.target.value)}
+        >
           <option value="mcq">MCQ Practice</option>
           <option value="ai-voice">AI Voice Interview</option>
-          <option value="coding">Coding Question Practice</option>
+          <option value="coding" disabled={isCodingLocked}>
+            Coding Question Practice{isCodingLocked ? " — Technical only" : ""}
+          </option>
         </select>
+        {isCodingLocked && (
+          <p className={styles.practiceTypeHint}>
+            ⚠ Coding Question Practice is only available for Technical Interviews.
+          </p>
+        )}
       </motion.div>
 
       <motion.div className={styles.formGroup} initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, delay: 0.94 }}>
@@ -255,7 +292,7 @@ export default function SetupForm() {
           </div>
           <div className={styles.arTags}>
             {(analysis?.tags ?? []).map((tag) => (
-              <span className={styles.arTag} key={tag} >
+              <span className={styles.arTag} key={tag}>
                 {tag}
               </span>
             ))}
@@ -273,10 +310,21 @@ export default function SetupForm() {
         initial={{ opacity: 0, y: 14 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.7, delay: 0.98 }}
+        disabled={isStarting || (session?.user !== undefined && userCredits < 10)}
       >
         {startText}
       </motion.button>
+
+      {session?.user && userCredits < 10 && (
+        <p style={{ fontSize: 12, color: "rgba(255,90,90,.85)", textAlign: "center", marginTop: 8 }}>
+          ⚠ Insufficient credits ({userCredits} remaining). Upgrade your plan to continue.
+        </p>
+      )}
+      {session?.user && userCredits >= 10 && (
+        <p style={{ fontSize: 11, color: "rgba(255,255,255,.22)", textAlign: "center", marginTop: 8 }}>
+          10 credits will be deducted · {userCredits} remaining
+        </p>
+      )}
     </div>
   );
 }
-

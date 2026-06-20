@@ -212,3 +212,431 @@
   .voiceLeft, .probPanel { border-right: none; border-bottom: .5px solid rgba(255,255,255,.07); }
 }
 
+
+/* ── Dynamic question loading states ─────────────────────────────────────── */
+.loadingState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: calc(100svh - 200px);
+  gap: 20px;
+}
+
+.loadingSpinner {
+  width: 36px;
+  height: 36px;
+  border: 2px solid rgba(255,255,255,.07);
+  border-top-color: rgba(255,255,255,.4);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.loadingText {
+  font-size: 14px;
+  color: rgba(255,255,255,.22);
+}
+
+.errorText {
+  font-size: 14px;
+  color: rgba(255,100,100,.8);
+}
+
+/* ── Difficulty badge variants ───────────────────────────────────────────── */
+.diffMedium {
+  background: rgba(255,190,60,.08);
+  border: .5px solid rgba(255,190,60,.3);
+  color: rgba(255,190,60,.85);
+}
+
+.diffHard {
+  background: rgba(255,90,90,.08);
+  border: .5px solid rgba(255,90,90,.3);
+  color: rgba(255,90,90,.8);
+}
+
+/* ── LeetCode link ───────────────────────────────────────────────────────── */
+.lcLink {
+  font-size: 12px;
+  color: rgba(255,255,255,.22);
+  text-decoration: none;
+  border-bottom: .5px solid rgba(255,255,255,.13);
+  padding-bottom: 1px;
+  transition: color .2s;
+}
+
+.lcLink:hover {
+  color: rgba(255,255,255,.55);
+}
+
+/* ── Test results panel ──────────────────────────────────────────────────── */
+.testPanel {
+  background: #0a0a0f;
+  height: 130px;
+  overflow-y: auto;
+  padding: 10px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.testPanel::-webkit-scrollbar { width: 4px; }
+.testPanel::-webkit-scrollbar-thumb { background: rgba(255,255,255,.13); border-radius: 2px; }
+
+.testEmpty {
+  font-size: 12px;
+  color: rgba(255,255,255,.22);
+  margin: auto;
+  text-align: center;
+}
+
+.testMeta {
+  font-size: 11px;
+  color: rgba(255,255,255,.22);
+  margin-bottom: 4px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+.testCase {
+  border-radius: 8px;
+  border: .5px solid rgba(255,255,255,.07);
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.testCasePassed { border-color: rgba(100,220,130,.2); background: rgba(100,220,130,.04); }
+.testCaseFailed { border-color: rgba(255,90,90,.2);  background: rgba(255,90,90,.03); }
+
+.testCaseHeader {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 12px;
+  border-bottom: .5px solid rgba(255,255,255,.05);
+}
+
+.testIcon     { font-size: 12px; color: rgba(100,220,130,.8); }
+.testIconFail { font-size: 12px; color: rgba(255,90,90,.8); }
+
+.testCaseLabel {
+  font-size: 12px;
+  color: rgba(255,255,255,.55);
+  flex: 1;
+}
+
+.testBadgePass {
+  font-size: 10px;
+  padding: 2px 8px;
+  border-radius: 20px;
+  background: rgba(100,220,130,.1);
+  border: .5px solid rgba(100,220,130,.25);
+  color: rgba(100,220,130,.8);
+}
+
+.testBadgeFail {
+  font-size: 10px;
+  padding: 2px 8px;
+  border-radius: 20px;
+  background: rgba(255,90,90,.08);
+  border: .5px solid rgba(255,90,90,.25);
+  color: rgba(255,90,90,.8);
+}
+
+.testCaseBody {
+  padding: 8px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.testRow {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 11px;
+}
+
+.testKey {
+  color: rgba(255,255,255,.22);
+  width: 60px;
+  flex-shrink: 0;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+.testVal {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  color: rgba(255,255,255,.55);
+  word-break: break-all;
+}
+
+.testValWrong {
+  color: rgba(255,90,90,.8);
+}
+
+/* ── Verdict banner ──────────────────────────────────────────────────────── */
+.verdictBanner {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  border-radius: 10px;
+  margin-bottom: 8px;
+  flex-shrink: 0;
+}
+
+.verdictAccepted {
+  background: rgba(100,220,130,.08);
+  border: .5px solid rgba(100,220,130,.25);
+}
+
+.verdictFailed {
+  background: rgba(255,90,90,.06);
+  border: .5px solid rgba(255,90,90,.2);
+}
+
+.verdictLabel {
+  font-family: var(--font-syne), sans-serif;
+  font-size: 14px;
+  font-weight: 800;
+  color: #fff;
+}
+
+.verdictScore {
+  font-size: 12px;
+  color: rgba(255,255,255,.55);
+  flex: 1;
+}
+
+.verdictMeta {
+  font-size: 11px;
+  color: rgba(255,255,255,.22);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+/* ── AI feedback ──────────────────────────────────────────────────────────── */
+.aiFeedbackBox {
+  background: rgba(255,255,255,.03);
+  border: .5px solid rgba(255,255,255,.07);
+  border-radius: 10px;
+  padding: 12px 14px;
+  margin-bottom: 8px;
+  flex-shrink: 0;
+}
+
+.aiFeedbackTitle {
+  font-size: 10px;
+  color: rgba(255,255,255,.22);
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+
+.aiFeedbackText {
+  font-size: 12px;
+  color: rgba(255,255,255,.55);
+  line-height: 1.6;
+}
+
+/* ── MCQ answered state ──────────────────────────────────────────────────── */
+.qnumAnswered {
+  background: rgba(255,255,255,.1);
+  border-color: rgba(255,255,255,.22);
+  color: rgba(255,255,255,.7);
+}
+
+/* ── MCQ submit button in sidebar ───────────────────────────────────────── */
+.btnSubmitMcq {
+  width: 100%;
+  background: #fff;
+  color: #000;
+  font-family: var(--font-dm-sans), sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 12px 16px;
+  border-radius: 12px;
+  border: none;
+  cursor: pointer;
+  transition: opacity .2s;
+  margin-top: 4px;
+}
+.btnSubmitMcq:hover { opacity: .88; }
+.btnSubmitMcq:disabled { opacity: .5; cursor: not-allowed; }
+
+/* ── MCQ Results screen ──────────────────────────────────────────────────── */
+.mcqResultsBody {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding: 32px 40px;
+  overflow-y: auto;
+  max-height: calc(100svh - 160px);
+}
+.mcqResultsBody::-webkit-scrollbar { width: 4px; }
+.mcqResultsBody::-webkit-scrollbar-thumb { background: rgba(255,255,255,.13); border-radius: 2px; }
+
+.mcqScoreCard {
+  background: rgba(8,8,12,.9);
+  border: .5px solid rgba(255,255,255,.13);
+  border-radius: 20px;
+  padding: 36px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  text-align: center;
+}
+
+.mcqScoreBig {
+  font-family: var(--font-syne), sans-serif;
+  font-size: clamp(48px, 8vw, 72px);
+  font-weight: 800;
+  letter-spacing: -2px;
+  line-height: 1;
+}
+
+.mcqScoreGrade {
+  font-size: 16px;
+  color: rgba(255,255,255,.55);
+  letter-spacing: .02em;
+}
+
+.mcqScoreRow {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  margin-top: 8px;
+}
+
+.mcqScoreStat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.mcqScoreStatVal {
+  font-family: var(--font-syne), sans-serif;
+  font-size: 24px;
+  font-weight: 800;
+}
+
+.mcqScoreStatLbl {
+  font-size: 11px;
+  color: rgba(255,255,255,.22);
+}
+
+.mcqScoreStatDivider {
+  width: .5px;
+  height: 32px;
+  background: rgba(255,255,255,.1);
+}
+
+/* ── MCQ review list ─────────────────────────────────────────────────────── */
+.mcqReviewList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.mcqReviewItem {
+  border-radius: 14px;
+  border: .5px solid rgba(255,255,255,.07);
+  overflow: hidden;
+  background: rgba(8,8,12,.7);
+}
+
+.mcqReviewCorrect { border-color: rgba(100,220,130,.2); }
+.mcqReviewWrong   { border-color: rgba(255,90,90,.2); }
+.mcqReviewSkipped { border-color: rgba(255,255,255,.07); }
+
+.mcqReviewHeader {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 18px;
+  border-bottom: .5px solid rgba(255,255,255,.05);
+}
+
+.mcqReviewNum {
+  font-size: 11px;
+  color: rgba(255,255,255,.22);
+  font-family: var(--font-syne), sans-serif;
+  font-weight: 700;
+  min-width: 24px;
+}
+
+.mcqReviewTag {
+  font-size: 11px;
+  padding: 3px 10px;
+  border-radius: 20px;
+  background: rgba(255,255,255,.04);
+  border: .5px solid rgba(255,255,255,.07);
+  color: rgba(255,255,255,.22);
+  flex: 1;
+}
+
+.mcqReviewBadgeCorrect {
+  font-size: 11px;
+  padding: 3px 10px;
+  border-radius: 20px;
+  background: rgba(100,220,130,.08);
+  border: .5px solid rgba(100,220,130,.25);
+  color: rgba(100,220,130,.85);
+}
+
+.mcqReviewBadgeWrong {
+  font-size: 11px;
+  padding: 3px 10px;
+  border-radius: 20px;
+  background: rgba(255,90,90,.08);
+  border: .5px solid rgba(255,90,90,.25);
+  color: rgba(255,90,90,.8);
+}
+
+.mcqReviewBadgeSkipped {
+  font-size: 11px;
+  padding: 3px 10px;
+  border-radius: 20px;
+  background: rgba(255,255,255,.04);
+  border: .5px solid rgba(255,255,255,.07);
+  color: rgba(255,255,255,.22);
+}
+
+.mcqReviewText {
+  font-size: 14px;
+  color: rgba(255,255,255,.7);
+  line-height: 1.55;
+  padding: 14px 18px 10px;
+}
+
+.mcqReviewOptions {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 0 18px 14px;
+}
+
+.mcqReviewOpt {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 14px;
+  border-radius: 10px;
+  background: rgba(255,255,255,.02);
+  border: .5px solid rgba(255,255,255,.05);
+  font-size: 13px;
+  color: rgba(255,255,255,.4);
+}
+
+.mcqReviewOptCorrect {
+  background: rgba(100,220,130,.06);
+  border-color: rgba(100,220,130,.25);
+  color: rgba(100,220,130,.85);
+}
+
+.mcqReviewOptWrong {
+  background: rgba(255,90,90,.06);
+  border-color: rgba(255,90,90,.25);
+  color: rgba(255,90,90,.8);
+}

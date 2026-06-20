@@ -1,6 +1,7 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  serverExternalPackages: ["pdf-parse", "mammoth"],
   async redirects() {
     return [
       { source: "/sign-in", destination: "/signin", permanent: false },
