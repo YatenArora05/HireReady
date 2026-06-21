@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import PracticeBackdrop from "../components/shared/PracticeBackdrop";
 import PracticeNav from "../components/shared/PracticeNav";
 import VoicePracticeView from "../components/voice/VoicePracticeView";
@@ -9,9 +10,17 @@ export default function VoicePage() {
       <PracticeBackdrop />
       <PracticeNav mode="voice" />
       <section className={styles.section}>
-        <VoicePracticeView />
+        <Suspense
+          fallback={
+            <div className={styles.loadingState}>
+              <div className={styles.loadingSpinner} />
+              <p className={styles.loadingText}>Preparing your session…</p>
+            </div>
+          }
+        >
+          <VoicePracticeView />
+        </Suspense>
       </section>
     </div>
   );
 }
-

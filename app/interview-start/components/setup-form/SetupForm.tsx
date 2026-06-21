@@ -160,7 +160,7 @@ export default function SetupForm() {
           ? `/interview-practice/mcq?type=${encodeURIComponent(type)}&difficulty=${encodeURIComponent(difficulty)}&experience=${encodeURIComponent(experience)}`
           : practiceType === "coding"
           ? `/interview-practice/coding?experience=${encodeURIComponent(experience)}&difficulty=${encodeURIComponent(difficulty)}`
-          : "/interview-practice/voice";
+          : `/interview-practice/voice?type=${encodeURIComponent(type)}&difficulty=${encodeURIComponent(difficulty)}&experience=${encodeURIComponent(experience)}`;
       router.push(targetPath);
     }, 2500);
   };
