@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
 import clientPromise from "@/lib/mongodb";
+import { sendWelcomeEmail } from "@/lib/mailer";
 
 export async function POST(req: Request) {
   try {
@@ -37,6 +38,11 @@ export async function POST(req: Request) {
       credits: 100,
       createdAt: new Date(),
       updatedAt: new Date(),
+    });
+
+    // Send welcome email — fire-and-forget, don't block signup on mail failure
+    sendWelcomeEmail(email, firstName).catch((err) => {
+      console.error("Welcome email failed:", err);
     });
 
     return NextResponse.json({ ok: true }, { status: 201 });

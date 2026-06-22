@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import Link from "next/link";
 import { useSession, signOut } from "next-auth/react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -128,12 +128,15 @@ function UpgradeBtn({ primary }: { primary?: boolean }) {
 // ─── Component ────────────────────────────────────────────────────────────────
 export default function PricingPage() {
   const { data: session } = useSession();
-  const isLoggedIn = Boolean(session?.user);
-  const userName = session?.user?.name?.trim() || "User";
+  const isLoggedIn  = Boolean(session?.user);
+  const credits     = session?.user?.credits ?? 100;
+  const userName    = session?.user?.name?.trim() || "User";
   const userInitial = userName.charAt(0).toUpperCase();
 
   const [yearly, setYearly] = useState(false);
   const [helpOpen, setHelpOpen] = useState(false);
+  const [openProfileMenu, setOpenProfileMenu] = useState(false);
+  const profileMenuRef = useRef<HTMLDivElement | null>(null);
 
   const price = (key: PlanKey) => yearly ? PRICES[key].y : PRICES[key].m;
   const note  = (key: PlanKey) => yearly ? ANNUAL_NOTES[key] : "\u00A0";
@@ -165,41 +168,56 @@ export default function PricingPage() {
         }} />
       ))}
 
-      {/* ── Nav ── */}
-      <nav style={{
-        position: "fixed", top: 0, left: 0, right: 0, zIndex: 100,
-        padding: "0 48px", height: 64, display: "flex", alignItems: "center",
-        justifyContent: "space-between",
-        background: "rgba(6,6,8,0.75)", backdropFilter: "blur(24px)",
-        borderBottom: "0.5px solid rgba(255,255,255,0.07)",
-      }}>
-        <Link href="/" style={{ fontFamily: "var(--font-syne), sans-serif", fontSize: 17, fontWeight: 800, color: "#fff", letterSpacing: "-0.5px", textDecoration: "none" }}>
-          prep<span style={{ color: "rgba(255,255,255,0.22)" }}>/</span>ai
+      {/* ── Nav — same as landing page ── */}
+      <nav>
+        <Link href="/" className="nav-logo">
+          prep<span>/</span>ai
         </Link>
-        <div style={{ display: "flex", alignItems: "center", gap: 32 }}>
-          {[["/#how", "Features"], ["/#roles", "Roles"], ["/pricing", "Pricing"], ["/#faq", "FAQ"]].map(([href, label]) => (
-            <Link key={href} href={href} style={{ fontSize: 13, color: href === "/pricing" ? "rgba(255,255,255,0.7)" : "rgba(255,255,255,0.22)", textDecoration: "none" }}>
-              {label}
-            </Link>
-          ))}
+        <div className="nav-links">
+          <Link href="/#how">How it works</Link>
+          <Link href="/#roles">Roles</Link>
+          <Link href="/#reviews">Reviews</Link>
+          <Link href="/#faq">FAQ</Link>
+          <Link href="/pricing">Pricing</Link>
         </div>
-        <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+        <div className="nav-cta">
           {isLoggedIn ? (
-            <>
-              <span style={{ fontSize: 13, color: "rgba(255,255,255,0.4)", fontFamily: "var(--font-syne), sans-serif", fontWeight: 700 }}>
-                {userInitial}
-              </span>
-              <button onClick={() => signOut({ callbackUrl: "/" })} style={{ background: "rgba(255,255,255,0.06)", border: "0.5px solid rgba(255,255,255,0.13)", color: "rgba(255,255,255,0.55)", fontSize: 13, fontFamily: "var(--font-dm-sans), sans-serif", padding: "8px 18px", borderRadius: 8, cursor: "pointer" }}>
-                Sign out
-              </button>
-            </>
+            <div className="auth-user-wrap">
+              <div className="credits-pill">
+                <span className="credits-icon">$</span>
+                {credits}
+              </div>
+              <div className="profile-menu-wrap" ref={profileMenuRef}>
+                <button
+                  type="button"
+                  className={`account-avatar-btn ${openProfileMenu ? "open" : ""}`}
+                  onClick={() => setOpenProfileMenu((prev) => !prev)}
+                  aria-label="Open profile menu"
+                >
+                  <span className="account-avatar">{userInitial}</span>
+                </button>
+                <div className={`profile-dropdown ${openProfileMenu ? "open" : ""}`}>
+                  <div className="profile-name">{userName}</div>
+                  <button
+                    type="button"
+                    className="profile-logout-btn"
+                    onClick={() => signOut({ callbackUrl: "/" })}
+                  >
+                    Logout
+                  </button>
+                </div>
+              </div>
+            </div>
           ) : (
             <>
-              <Link href="/signin" style={{ background: "rgba(255,255,255,0.06)", border: "0.5px solid rgba(255,255,255,0.13)", color: "rgba(255,255,255,0.55)", fontSize: 13, fontFamily: "var(--font-dm-sans), sans-serif", padding: "8px 18px", borderRadius: 8, textDecoration: "none", display: "inline-block" }}>
-                Sign in
+              <Link href="/signin" className="auth-btn auth-btn-signin">
+                Sign In
               </Link>
-              <Link href="/signup" style={{ background: "#fff", border: "none", color: "#000", fontSize: 13, fontFamily: "var(--font-dm-sans), sans-serif", fontWeight: 600, padding: "8px 18px", borderRadius: 8, textDecoration: "none", display: "inline-block" }}>
-                Get started free
+              <Link href="/signup" className="auth-btn auth-btn-signup" aria-label="Sign Up">
+                <span className="signup-text-track" aria-hidden="true">
+                  <span>Sign Up</span>
+                  <span>Get Started</span>
+                </span>
               </Link>
             </>
           )}

@@ -284,7 +284,7 @@ export default function VoicePracticeView() {
         </div>
         <div className={styles.loadingState}>
           <div className={styles.loadingSpinner} />
-          <p className={styles.loadingText}>Generating your interview questions with AI…</p>
+          <p className={styles.loadingText}>Generating your interview questions</p>
         </div>
       </>
     );

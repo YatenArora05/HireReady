@@ -327,8 +327,8 @@ export default function CodingPracticeView() {
           <div className={styles.loadingSpinner} />
           <p className={styles.loadingText}>
             {consoleLines.some(l => l.text.includes("syncing"))
-              ? "Syncing problem list from LeetCode (one-time setup)…"
-              : "Fetching your question from LeetCode…"}
+              ? "Syncing problem list"
+              : "Fetching your question "}
           </p>
         </div>
       </>
@@ -407,11 +407,11 @@ export default function CodingPracticeView() {
                 <p className={styles.probDesc}>{question.hints[0]}</p>
               </div>
             )}
-            <div className={styles.probSection}>
+            {/* <div className={styles.probSection}>
               <a href={`https://leetcode.com/problems/${question.titleSlug}/`} target="_blank" rel="noopener noreferrer" className={styles.lcLink}>
                 View on LeetCode →
               </a>
-            </div>
+            </div> */}
           </div>
         </aside>
 

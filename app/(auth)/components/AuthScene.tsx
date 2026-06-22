@@ -94,6 +94,7 @@ export default function AuthScene({ mode }: AuthSceneProps) {
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -235,16 +236,31 @@ export default function AuthScene({ mode }: AuthSceneProps) {
                 <div style={pwWrapStyle}>
                   <input
                     style={{ ...inputStyle, paddingRight: "44px" }}
-                    type="password"
+                    type={showPassword ? "text" : "password"}
                     placeholder={isSignUp ? "Create a strong password" : "Enter your password"}
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                   />
-                  <button type="button" style={pwToggleStyle} aria-label="Toggle password visibility">
-                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-                      <path d="M1 8s2.5-5 7-5 7 5 7 5-2.5 5-7 5-7-5-7-5z" stroke="currentColor" strokeWidth="1.2" />
-                      <circle cx="8" cy="8" r="2" stroke="currentColor" strokeWidth="1.2" />
-                    </svg>
+                  <button
+                    type="button"
+                    style={{ ...pwToggleStyle, color: showPassword ? "rgba(255,255,255,0.55)" : "rgba(255,255,255,0.22)" }}
+                    aria-label={showPassword ? "Hide password" : "Show password"}
+                    onClick={() => setShowPassword((p) => !p)}
+                  >
+                    {showPassword ? (
+                      // Eye-off icon
+                      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                        <path d="M1 8s2.5-5 7-5 7 5 7 5-2.5 5-7 5-7-5-7-5z" stroke="currentColor" strokeWidth="1.2" />
+                        <circle cx="8" cy="8" r="2" stroke="currentColor" strokeWidth="1.2" />
+                        <line x1="2" y1="2" x2="14" y2="14" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" />
+                      </svg>
+                    ) : (
+                      // Eye icon
+                      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                        <path d="M1 8s2.5-5 7-5 7 5 7 5-2.5 5-7 5-7-5-7-5z" stroke="currentColor" strokeWidth="1.2" />
+                        <circle cx="8" cy="8" r="2" stroke="currentColor" strokeWidth="1.2" />
+                      </svg>
+                    )}
                   </button>
                 </div>
               </div>
