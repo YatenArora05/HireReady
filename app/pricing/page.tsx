@@ -9,24 +9,32 @@ import { motion, AnimatePresence } from "framer-motion";
 type PlanKey = "pro" | "proplus" | "max" | "teams";
 
 const PRICES: Record<PlanKey, { m: number; y: number }> = {
-  pro:     { m: 19,  y: 13  },
-  proplus: { m: 39,  y: 27  },
-  max:     { m: 79,  y: 55  },
-  teams:   { m: 199, y: 139 },
+  pro:     { m: 12,  y: 10  },
+  proplus: { m: 29,  y: 24  },
+  max:     { m: 59,  y: 49  },
+  teams:   { m: 149, y: 124 },
 };
 
 const ANNUAL_NOTES: Record<PlanKey, string> = {
-  pro:     "Billed $156/year",
-  proplus: "Billed $324/year",
-  max:     "Billed $660/year",
-  teams:   "Billed $1,668/year",
+  pro:     "Billed $120/year",
+  proplus: "Billed $288/year",
+  max:     "Billed $588/year",
+  teams:   "Billed $1,488/year",
 };
 
-const PAID_PLANS: { key: PlanKey; name: string; desc: string; credits: string; primary?: boolean }[] = [
-  { key: "pro",     name: "PrepAI Pro",    desc: "For individual job seekers",     credits: "Unlimited sessions/month",        primary: true },
-  { key: "proplus", name: "PrepAI Pro+",   desc: "For active job hunters",         credits: "Unlimited + Mock interviews" },
-  { key: "max",     name: "PrepAI Max",    desc: "For advanced preparation",       credits: "Unlimited + Resume review" },
-  { key: "teams",   name: "PrepAI Teams",  desc: "For bootcamps & universities",   credits: "Unlimited + Team seats & SSO" },
+// credits per month, cost per credit
+const PLAN_CREDITS: Record<PlanKey, { credits: string; costPer: string }> = {
+  pro:     { credits: "500 credits/mo",    costPer: "$0.024 / credit" },
+  proplus: { credits: "1,500 credits/mo",  costPer: "$0.019 / credit" },
+  max:     { credits: "4,000 credits/mo",  costPer: "$0.015 / credit" },
+  teams:   { credits: "12,000 credits/mo", costPer: "$0.012 / credit" },
+};
+
+const PAID_PLANS: { key: PlanKey; name: string; desc: string; primary?: boolean }[] = [
+  { key: "pro",     name: "PrepAI Pro",    desc: "For individual job seekers",   primary: true },
+  { key: "proplus", name: "PrepAI Pro+",   desc: "For active job hunters" },
+  { key: "max",     name: "PrepAI Max",    desc: "For advanced preparation" },
+  { key: "teams",   name: "PrepAI Teams",  desc: "For bootcamps & universities" },
 ];
 
 // ─── Icons ────────────────────────────────────────────────────────────────────
@@ -251,7 +259,7 @@ export default function PricingPage() {
             <div style={{ fontSize: 12, color: "rgba(255,255,255,0.22)", marginTop: 2 }}>For light usage</div>
           </div>
           <PriceBlock amount="0" per="per month" note="\u00A0" />
-          <CreditsBlock value="5" label="sessions/month" />
+          <CreditsBlock value="50" label="credits/mo" costPer="—" />
           <button style={{ background: "rgba(255,255,255,0.08)", border: "0.5px solid rgba(255,255,255,0.13)", color: "rgba(255,255,255,0.4)", fontFamily: "var(--font-dm-sans), sans-serif", fontSize: 13, fontWeight: 500, padding: "10px 20px", borderRadius: 10, cursor: "default", whiteSpace: "nowrap" }}>
             Current plan
           </button>
@@ -268,14 +276,14 @@ export default function PricingPage() {
         <FeatureBanner icon={<IconStar />} features={["Unlimited sessions", "Audio recording", "Resume-based feedback", "STAR method coaching", "Progress analytics"]} />
 
         {/* Paid plan rows */}
-        {PAID_PLANS.map(({ key, name, desc, credits, primary }) => (
+        {PAID_PLANS.map(({ key, name, desc, primary }) => (
           <PlanRow key={key} paid>
             <div>
               <div style={{ fontFamily: "var(--font-syne), sans-serif", fontSize: 15, fontWeight: 700, color: "rgba(255,255,255,0.9)" }}>{name}</div>
               <div style={{ fontSize: 12, color: "rgba(255,255,255,0.22)", marginTop: 2 }}>{desc}</div>
             </div>
             <PriceBlock amount={String(price(key))} per="per month" note={note(key)} />
-            <CreditsBlock value="Unlimited" label={credits.replace("Unlimited ", "")} />
+            <CreditsBlock value={PLAN_CREDITS[key].credits.split(" ")[0]} label={PLAN_CREDITS[key].credits.split(" ").slice(1).join(" ")} costPer={PLAN_CREDITS[key].costPer} />
             <UpgradeBtn primary={primary} />
           </PlanRow>
         ))}
@@ -436,11 +444,14 @@ function PriceBlock({ amount, per, note }: { amount: string; per: string; note: 
   );
 }
 
-function CreditsBlock({ value, label }: { value: string; label: string }) {
+function CreditsBlock({ value, label, costPer }: { value: string; label: string; costPer: string }) {
   return (
-    <div style={{ whiteSpace: "nowrap" as const }}>
-      <span style={{ fontFamily: "var(--font-syne), sans-serif", fontSize: 16, fontWeight: 700, color: "#fff" }}>{value}</span>
-      <span style={{ fontSize: 12, color: "rgba(255,255,255,0.22)" }}> {label}</span>
+    <div style={{ whiteSpace: "nowrap" as const, textAlign: "right" as const }}>
+      <div>
+        <span style={{ fontFamily: "var(--font-syne), sans-serif", fontSize: 16, fontWeight: 700, color: "#fff" }}>{value}</span>
+        <span style={{ fontSize: 12, color: "rgba(255,255,255,0.22)" }}> {label}</span>
+      </div>
+      <div style={{ fontSize: 11, color: "rgba(255,255,255,0.22)", marginTop: 2 }}>{costPer}</div>
     </div>
   );
 }

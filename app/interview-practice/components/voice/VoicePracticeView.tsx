@@ -31,11 +31,31 @@ type FinalReport = {
   recommendation: string;
 };
 
-// Web Speech API types
+// Web Speech API — not in TypeScript's standard lib
+type SpeechRecognitionResultItem = { transcript: string };
+type SpeechRecognitionResult = { isFinal: boolean; [index: number]: SpeechRecognitionResultItem };
+type SpeechRecognitionResultList = { length: number; [index: number]: SpeechRecognitionResult };
+
+type SpeechRecognitionEvent = {
+  resultIndex: number;
+  results: SpeechRecognitionResultList;
+};
+
+type SpeechRecognitionType = {
+  continuous: boolean;
+  interimResults: boolean;
+  lang: string;
+  onresult: ((event: SpeechRecognitionEvent) => void) | null;
+  onerror: (() => void) | null;
+  onend: (() => void) | null;
+  start: () => void;
+  stop: () => void;
+};
+
 declare global {
   interface Window {
-    SpeechRecognition: new () => SpeechRecognition;
-    webkitSpeechRecognition: new () => SpeechRecognition;
+    SpeechRecognition: new () => SpeechRecognitionType;
+    webkitSpeechRecognition: new () => SpeechRecognitionType;
   }
 }
 
@@ -90,7 +110,7 @@ export default function VoicePracticeView() {
   const [generatingReport, setGeneratingReport] = useState(false);
   const [finalReport,      setFinalReport]      = useState<FinalReport | null>(null);
 
-  const recognitionRef = useRef<SpeechRecognition | null>(null);
+  const recognitionRef = useRef<SpeechRecognitionType | null>(null);
   const currentQuestion = questions[qIdx] ?? null;
 
   // ─── Load questions + deduct credits ────────────────────────────────────────
@@ -142,9 +162,9 @@ export default function VoicePracticeView() {
     if (!SR) { alert("Speech recognition is not supported in this browser. Please use Chrome."); return; }
 
     const rec = new SR();
-    rec.continuous      = true;
-    rec.interimResults  = true;
-    rec.lang            = "en-US";
+    rec.continuous     = true;
+    rec.interimResults = true;
+    rec.lang           = "en-US";
 
     rec.onresult = (event: SpeechRecognitionEvent) => {
       let finalPart  = "";
