@@ -168,9 +168,21 @@ export default function Home() {
             <button className="btn-primary" onClick={handleTryNowClick}>
               {isLoggedIn ? "Start practising →" : "Try now for free →"}
             </button>
-            <button className="btn-outline">Watch demo</button>
+            {isLoggedIn ? (
+              <Link href="/dashboard/progress" className="btn-outline">Progress</Link>
+            ) : (
+              <button className="btn-outline">Watch demo</button>
+            )}
           </div>
-          <p className="hero-note">No credit card needed</p>
+          <p className="hero-note">
+            {isLoggedIn ? (
+              <a href="/resume-analyzer" style={{ color: "rgba(255,255,255,0.35)", textDecoration: "none" }}>
+                📄 Analyze your resume →
+              </a>
+            ) : (
+              "No credit card needed"
+            )}
+          </p>
         </div>
 
         <div className="hero-screen-wrap">

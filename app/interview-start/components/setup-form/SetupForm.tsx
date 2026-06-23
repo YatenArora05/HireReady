@@ -259,7 +259,7 @@ export default function SetupForm() {
         )}
       </motion.div>
 
-      <motion.div className={styles.formGroup} initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, delay: 0.94 }}>
+      {/* <motion.div className={styles.formGroup} initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, delay: 0.94 }}>
         <label className={styles.fieldLabel}>
           Resume <span className={styles.optionalBadge}>Optional</span>
         </label>
@@ -274,7 +274,7 @@ export default function SetupForm() {
           <span className={styles.uploadLabel}>{fileName || "Click to upload resume"}</span>
           <span className={styles.uploadSub}>{uploadSub}</span>
         </label>
-      </motion.div>
+      </motion.div> */}
 
       <motion.div className={`${styles.analyzeWrap} ${analyzeVisible ? styles.visible : ""}`} initial={false}>
         <button type="button" className={`${styles.btnAnalyze} ${isAnalyzing ? styles.analyzing : ""}`} onClick={runAnalyze}>

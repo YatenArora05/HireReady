@@ -136,10 +136,28 @@ export default function PricingPage() {
   const [yearly, setYearly] = useState(false);
   const [helpOpen, setHelpOpen] = useState(false);
   const [openProfileMenu, setOpenProfileMenu] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [deleting, setDeleting] = useState(false);
+  const [deleteError, setDeleteError] = useState("");
   const profileMenuRef = useRef<HTMLDivElement | null>(null);
 
   const price = (key: PlanKey) => yearly ? PRICES[key].y : PRICES[key].m;
   const note  = (key: PlanKey) => yearly ? ANNUAL_NOTES[key] : "\u00A0";
+
+  const handleDeleteAccount = async () => {
+    setDeleting(true);
+    setDeleteError("");
+    try {
+      const res = await fetch("/api/account/delete", { method: "DELETE" });
+      const data = await res.json() as { ok?: boolean; error?: string };
+      if (!res.ok) throw new Error(data.error ?? "Failed to delete account.");
+      // Sign out and redirect to home after deletion
+      await signOut({ callbackUrl: "/" });
+    } catch (err) {
+      setDeleteError(err instanceof Error ? err.message : "Something went wrong.");
+      setDeleting(false);
+    }
+  };
 
   return (
     <>
@@ -277,7 +295,7 @@ export default function PricingPage() {
             <div style={{ fontSize: 12, color: "rgba(255,255,255,0.22)", marginTop: 2 }}>For light usage</div>
           </div>
           <PriceBlock amount="0" per="per month" note="\u00A0" />
-          <CreditsBlock value="50" label="credits/mo" costPer="—" />
+          <CreditsBlock value="100" label="credits/mo" costPer="—" />
           <button style={{ background: "rgba(255,255,255,0.08)", border: "0.5px solid rgba(255,255,255,0.13)", color: "rgba(255,255,255,0.4)", fontFamily: "var(--font-dm-sans), sans-serif", fontSize: 13, fontWeight: 500, padding: "10px 20px", borderRadius: 10, cursor: "default", whiteSpace: "nowrap" }}>
             Current plan
           </button>
@@ -378,7 +396,9 @@ export default function PricingPage() {
                     animate={{ opacity: 1 }}
                     transition={{ duration: 0.3, delay: 0.24 }}
                   >
-                    <button style={{ display: "inline-flex", alignItems: "center", gap: 6, background: "transparent", border: "0.5px solid rgba(255,80,80,0.2)", color: "rgba(255,80,80,0.5)", fontSize: 12, fontFamily: "var(--font-dm-sans), sans-serif", padding: "8px 16px", borderRadius: 8, cursor: "pointer", margin: "16px 22px" }}>
+                    <button style={{ display: "inline-flex", alignItems: "center", gap: 6, background: "transparent", border: "0.5px solid rgba(255,80,80,0.2)", color: "rgba(255,80,80,0.5)", fontSize: 12, fontFamily: "var(--font-dm-sans), sans-serif", padding: "8px 16px", borderRadius: 8, cursor: "pointer", margin: "16px 22px" }}
+                      onClick={() => setShowDeleteModal(true)}
+                    >
                       <IconDelete />
                       Delete account
                     </button>
@@ -395,6 +415,134 @@ export default function PricingPage() {
         @keyframes fadeUp { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes rowIn  { from { opacity: 0; transform: translateX(-12px); } to { opacity: 1; transform: translateX(0); } }
         @keyframes shimmer { 0% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }
+      `}</style>
+
+      {/* ── Delete confirmation modal ── */}
+      <AnimatePresence>
+        {showDeleteModal && (
+          <>
+            {/* Backdrop */}
+            <motion.div
+              key="backdrop"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              onClick={() => !deleting && setShowDeleteModal(false)}
+              style={{
+                position: "fixed", inset: 0, zIndex: 999,
+                background: "rgba(0,0,0,0.7)",
+                backdropFilter: "blur(8px)",
+              }}
+            />
+
+            {/* Modal */}
+            <motion.div
+              key="modal"
+              initial={{ opacity: 0, scale: 0.94, y: 16 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.94, y: 16 }}
+              transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+              style={{
+                position: "fixed",
+                top: 0, left: 0, right: 0, bottom: 0,
+                zIndex: 1000,
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                pointerEvents: "none",
+              }}
+            >
+              <div
+                style={{
+                  width: "100%", maxWidth: 420,
+                  background: "rgba(10,10,14,0.98)",
+                  border: "0.5px solid rgba(255,255,255,0.13)",
+                  borderRadius: 20,
+                  padding: "32px 28px",
+                  boxShadow: "0 24px 80px rgba(0,0,0,0.6)",
+                  position: "relative",
+                  pointerEvents: "all",
+                  margin: "0 20px",
+                }}
+              >
+              {/* Top shine */}
+              <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 1, borderRadius: "20px 20px 0 0", background: "linear-gradient(90deg,transparent,rgba(255,255,255,0.1),transparent)" }} />
+
+              {/* Icon */}
+              <div style={{ width: 48, height: 48, borderRadius: 12, background: "rgba(255,60,60,0.1)", border: "0.5px solid rgba(255,60,60,0.2)", display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 20 }}>
+                <svg width="22" height="22" viewBox="0 0 22 22" fill="none" aria-hidden="true">
+                  <path d="M3 5h16M9 5V4h4v1M5 5v13a2 2 0 002 2h8a2 2 0 002-2V5" stroke="rgba(255,80,80,0.8)" strokeWidth="1.5" strokeLinecap="round" />
+                  <line x1="9" y1="10" x2="9" y2="16" stroke="rgba(255,80,80,0.6)" strokeWidth="1.4" strokeLinecap="round" />
+                  <line x1="13" y1="10" x2="13" y2="16" stroke="rgba(255,80,80,0.6)" strokeWidth="1.4" strokeLinecap="round" />
+                </svg>
+              </div>
+
+              <h2 style={{ fontFamily: "var(--font-syne), sans-serif", fontSize: 20, fontWeight: 800, letterSpacing: "-0.5px", marginBottom: 8 }}>
+                Delete your account?
+              </h2>
+              <p style={{ fontSize: 14, color: "rgba(255,255,255,0.45)", lineHeight: 1.6, marginBottom: 24 }}>
+                This will permanently delete your account, all your practice history, sessions, and credits. This action <strong style={{ color: "rgba(255,255,255,0.65)" }}>cannot be undone</strong>.
+              </p>
+
+              {deleteError && (
+                <p style={{ fontSize: 12, color: "rgba(255,90,90,0.9)", background: "rgba(255,60,60,0.06)", border: "0.5px solid rgba(255,60,60,0.2)", borderRadius: 8, padding: "10px 14px", marginBottom: 18 }}>
+                  ⚠ {deleteError}
+                </p>
+              )}
+
+              <div style={{ display: "flex", gap: 10 }}>
+                <button
+                  onClick={() => { setShowDeleteModal(false); setDeleteError(""); }}
+                  disabled={deleting}
+                  style={{
+                    flex: 1, padding: "12px 0", borderRadius: 12,
+                    background: "rgba(255,255,255,0.06)",
+                    border: "0.5px solid rgba(255,255,255,0.13)",
+                    color: "rgba(255,255,255,0.55)",
+                    fontFamily: "var(--font-dm-sans), sans-serif",
+                    fontSize: 14, fontWeight: 500, cursor: "pointer",
+                    transition: "all 0.2s",
+                    opacity: deleting ? 0.5 : 1,
+                  }}
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={handleDeleteAccount}
+                  disabled={deleting}
+                  style={{
+                    flex: 1, padding: "12px 0", borderRadius: 12,
+                    background: deleting ? "rgba(200,40,40,0.6)" : "rgba(220,40,40,0.9)",
+                    border: "none",
+                    color: "#fff",
+                    fontFamily: "var(--font-dm-sans), sans-serif",
+                    fontSize: 14, fontWeight: 600, cursor: deleting ? "not-allowed" : "pointer",
+                    transition: "all 0.2s",
+                    display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
+                  }}
+                >
+                  {deleting ? (
+                    <>
+                      <span style={{ width: 14, height: 14, border: "2px solid rgba(255,255,255,0.3)", borderTopColor: "#fff", borderRadius: "50%", display: "inline-block", animation: "spin 0.7s linear infinite" }} />
+                      Deleting…
+                    </>
+                  ) : (
+                    "Delete account"
+                  )}
+                </button>
+              </div>
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
+
+      <style>{`
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes rowIn  { from { opacity: 0; transform: translateX(-12px); } to { opacity: 1; transform: translateX(0); } }
+        @keyframes shimmer { 0% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }
+        @keyframes spin { to { transform: rotate(360deg); } }
       `}</style>
     </>
   );

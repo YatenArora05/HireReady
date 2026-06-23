@@ -8,7 +8,7 @@ const features = [
   { id: "role", name: "Choose Role & Experience", sub: "Tailored to your level" },
   { id: "practice-type", name: "Select Practice Type", sub: "MCQ, Voice, or Coding mode" },
   { id: "voice", name: "Smart Voice Interview", sub: "Speak your answers naturally" },
-  { id: "analytics", name: "Performance Analytics", sub: "Track clarity, structure & tone" },
+ 
 ];
 
 export default function LeftPanel() {
