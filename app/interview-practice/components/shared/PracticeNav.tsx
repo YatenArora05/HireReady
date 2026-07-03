@@ -7,7 +7,7 @@ export default function PracticeNav({ mode }: { mode: Mode }) {
   return (
     <nav className={styles.nav}>
       <div className={styles.navLogo}>
-        prep<span>/</span>ai
+        HireReady
       </div>
       {/* <div className={styles.navTabs}>
         <Link className={`${styles.navTab} ${mode === "mcq" ? styles.navTabActive : ""}`} href="/interview-practice/mcq">

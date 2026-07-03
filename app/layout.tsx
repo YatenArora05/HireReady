@@ -14,7 +14,7 @@ const dmSans = DM_Sans({
 });
 
 export const metadata: Metadata = {
-  title: "PrepAI - AI Interview Coaching",
+  title: "HireReady - AI Interview Coaching",
   description:
     "Practice tailored interview questions and get instant AI coaching to improve your answers.",
 };

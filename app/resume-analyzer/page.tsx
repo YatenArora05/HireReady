@@ -235,7 +235,7 @@ export default function ResumeAnalyzerPage() {
 
       {/* Nav */}
       <nav>
-        <Link href="/" className="nav-logo">prep<span>/</span>ai</Link>
+        <Link href="/" className="nav-logo">HireReady</Link>
         <div className="nav-links">
           <Link href="/#how">How it works</Link>
           <Link href="/#roles">Roles</Link>

@@ -149,7 +149,7 @@ export default function AuthScene({ mode }: AuthSceneProps) {
 
       <nav style={navStyle}>
         <Link href="/" style={navLogoStyle}>
-          prep<span style={{ color: "rgba(255,255,255,0.22)" }}>/</span>ai
+          HireReady
         </Link>
         <div style={navSwitchStyle}>
           {isSignUp ? "Already have an account?" : "New here?"}{" "}
@@ -179,7 +179,7 @@ export default function AuthScene({ mode }: AuthSceneProps) {
                 {isSignUp ? "Create your" : "Sign in to"}
                 <br />
                 <em style={{ fontStyle: "normal", color: "rgba(255,255,255,0.22)" }}>
-                  {isSignUp ? "free account." : "prep.ai"}
+                  {isSignUp ? "free account." : "HireReady"}
                 </em>
               </h1>
               <p style={subtitleStyle}>

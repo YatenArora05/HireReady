@@ -8,7 +8,7 @@ import { useRouter } from "next/navigation";
 const faqItems = [
   {
     q: "Why did you make this site?",
-    a: "We built prep.ai to democratize interview preparation. Everyone deserves access to high-quality coaching, not just those who can afford expensive coaches or have the right connections.",
+    a: "We built HireReady to democratize interview preparation. Everyone deserves access to high-quality coaching, not just those who can afford expensive coaches or have the right connections.",
   },
   {
     q: "How accurate are the AI interview questions and feedback?",
@@ -20,7 +20,7 @@ const faqItems = [
   },
   {
     q: "How is this different from using ChatGPT?",
-    a: "Unlike a generic chatbot, prep.ai is purpose-built for interview prep - with timed sessions, audio recording, structured scoring, sample responses, and a curated question bank. Everything is designed around the interview workflow.",
+    a: "Unlike a generic chatbot, HireReady is purpose-built for interview prep - with timed sessions, audio recording, structured scoring, sample responses, and a curated question bank. Everything is designed around the interview workflow.",
   },
   {
     q: "Is it free to use?",
@@ -97,7 +97,7 @@ export default function Home() {
 
       <nav>
         <a href="#" className="nav-logo">
-          prep<span>/</span>ai
+          HireReady
         </a>
         <div className="nav-links">
           <a href="#how">How it works</a>
@@ -414,7 +414,7 @@ export default function Home() {
               name: "Charles Burr",
               role: "UX Designer",
               quote:
-                "Love prep.ai - it has been helping me so much prepping for a big interview tomorrow! The AI coaching is genuinely impressive.",
+                "Love HireReady - it has been helping me so much prepping for a big interview tomorrow! The AI coaching is genuinely impressive.",
             },
           ].map((item) => (
             <div className="testi-card reveal" key={item.name}>
@@ -470,10 +470,10 @@ export default function Home() {
 
       <footer>
         <div className="footer-logo">
-          prep<span>/</span>ai
+          HireReady
         </div>
         <div className="footer-right">
-          Questions? Email <a href="mailto:hello@prepai.io">hello@prepai.io</a>
+          Questions? Email <a href="mailto:hello@hireready.io">hello@hireready.io</a>
         </div>
       </footer>
 

@@ -31,10 +31,10 @@ const PLAN_CREDITS: Record<PlanKey, { credits: string; costPer: string }> = {
 };
 
 const PAID_PLANS: { key: PlanKey; name: string; desc: string; primary?: boolean }[] = [
-  { key: "pro",     name: "PrepAI Pro",    desc: "For individual job seekers",   primary: true },
-  { key: "proplus", name: "PrepAI Pro+",   desc: "For active job hunters" },
-  { key: "max",     name: "PrepAI Max",    desc: "For advanced preparation" },
-  { key: "teams",   name: "PrepAI Teams",  desc: "For bootcamps & universities" },
+  { key: "pro",     name: "HireReady Pro",    desc: "For individual job seekers",   primary: true },
+  { key: "proplus", name: "HireReady Pro+",   desc: "For active job hunters" },
+  { key: "max",     name: "HireReady Max",    desc: "For advanced preparation" },
+  { key: "teams",   name: "HireReady Teams",  desc: "For bootcamps & universities" },
 ];
 
 // ─── Icons ────────────────────────────────────────────────────────────────────
@@ -189,7 +189,7 @@ export default function PricingPage() {
       {/* ── Nav — same as landing page ── */}
       <nav>
         <Link href="/" className="nav-logo">
-          prep<span>/</span>ai
+          Hire<span></span>Ready
         </Link>
         <div className="nav-links">
           <Link href="/#how">How it works</Link>
@@ -248,7 +248,7 @@ export default function PricingPage() {
         {/* Header */}
         <div style={{ padding: "40px 24px 36px", animation: "fadeUp 0.6s 0.1s both" }}>
           <h1 style={{ fontFamily: "var(--font-syne), sans-serif", fontSize: 28, fontWeight: 800, letterSpacing: "-0.8px", color: "#fff", marginBottom: 4 }}>
-            Choose your PrepAI Plan
+            Choose your HireReady Plan
           </h1>
           <p style={{ fontSize: 14, color: "rgba(255,255,255,0.22)", marginTop: 4 }}>
             Flexible plans for every stage of your career journey.
@@ -291,7 +291,7 @@ export default function PricingPage() {
         {/* Free plan row */}
         <PlanRow>
           <div>
-            <div style={{ fontFamily: "var(--font-syne), sans-serif", fontSize: 15, fontWeight: 700, color: "#fff" }}>PrepAI Free</div>
+            <div style={{ fontFamily: "var(--font-syne), sans-serif", fontSize: 15, fontWeight: 700, color: "#fff" }}>HireReady Free</div>
             <div style={{ fontSize: 12, color: "rgba(255,255,255,0.22)", marginTop: 2 }}>For light usage</div>
           </div>
           <PriceBlock amount="0" per="per month" note="\u00A0" />
@@ -328,7 +328,7 @@ export default function PricingPage() {
         <div style={{ margin: "16px 24px 0", padding: "16px 18px", background: "rgba(255,255,255,0.02)", border: "0.5px solid rgba(255,255,255,0.07)", borderRadius: 12, display: "flex", gap: 10 }}>
           <div style={{ flexShrink: 0, marginTop: 1, color: "rgba(255,255,255,0.22)" }}><IconInfo /></div>
           <p style={{ fontSize: 12, color: "rgba(255,255,255,0.22)", lineHeight: 1.6 }}>
-            For any paid plan, you can cancel at any time. Prices are exclusive of applicable taxes and duties including VAT. The 7-day free trial applies to PrepAI Pro — no credit card required to start.
+            For any paid plan, you can cancel at any time. Prices are exclusive of applicable taxes and duties including VAT. The 7-day free trial applies to HireReady Pro — no credit card required to start.
           </p>
         </div>
 
@@ -360,9 +360,9 @@ export default function PricingPage() {
                   transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
                 >
                   {([
-                    { label: "Technical support", sub: null as string | null, link: "hello@prepai.io", href: "mailto:hello@prepai.io" },
-                    { label: "Documentation", sub: "Guides, API reference and tutorials", link: "docs.prepai.io", href: "#" },
-                    { label: "Blog & updates", sub: "News, tutorials and team updates", link: "blog.prepai.io", href: "#" },
+                    { label: "Technical support", sub: null as string | null, link: "hello@hireready.io", href: "mailto:hello@hireready.io" },
+                    { label: "Documentation", sub: "Guides, API reference and tutorials", link: "docs.hireready.io", href: "#" },
+                    { label: "Blog & updates", sub: "News, tutorials and team updates", link: "blog.hireready.io", href: "#" },
                   ] as const).map((row, i) => (
                     <motion.div
                       key={row.label}

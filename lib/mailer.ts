@@ -55,7 +55,7 @@ function buildWelcomeHtml(firstName: string): string {
     <div class="card">
       <div class="top-bar"></div>
       <div class="body">
-        <div class="logo">prep<span>/</span>ai</div>
+        <div class="logo">HireReady</div>
 
         <span class="hero-emoji">🎉</span>
 
@@ -110,8 +110,8 @@ function buildWelcomeHtml(firstName: string): string {
       <div class="footer">
         <p>
           You're receiving this because you created a Hire Ready account.<br/>
-          <a href="${process.env.NEXTAUTH_URL ?? "https://hire-ready-lac.vercel.app/"}">prepai.io</a> &nbsp;·&nbsp;
-          <a href="mailto:hello@prepai.io">hello@prepai.io</a>
+          <a href="${process.env.NEXTAUTH_URL ?? "https://hireready.io"}">hireready.io</a> &nbsp;·&nbsp;
+          <a href="mailto:hello@hireready.io">hello@hireready.io</a>
         </p>
       </div>
     </div>

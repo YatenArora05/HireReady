@@ -5,7 +5,7 @@ export default function StartInterviewNav() {
   return (
     <nav className={styles.nav}>
       <Link href="/" className={styles.navLogo}>
-        prep<span>/</span>ai
+        HireReady
       </Link>
       <div className={styles.navRight}>
         <Link href="/" className={styles.navBack}>
